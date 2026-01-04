@@ -25,7 +25,22 @@ This documentation is organized into modular files for better navigation. See th
 - **[PERFORMANCE.md](./docs/PERFORMANCE.md)** - Performance metrics and optimization
 - **[CONTRIBUTING.md](./docs/CONTRIBUTING.md)** - Contribution guidelines
 
-## 🚀 Quick Start
+## 🐳 Run with Docker (Recommended)
+
+You can run the entire application stack (App + MongoDB) with a single command. No need to install Node.js or MongoDB locally.
+
+1.  **Start the Platform**
+    ```bash
+    docker-compose up --build
+    ```
+
+2.  **Access Application**
+    - Organizer: `http://localhost:3000/organizer`
+    - Participant: `http://localhost:3000/`
+
+---
+
+## 🚀 Manual Quick Start
 
 1. **Clone & Install**
    ```bash
