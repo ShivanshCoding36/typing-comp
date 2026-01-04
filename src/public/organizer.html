@@ -95,6 +95,19 @@
             </div>
           </div>
 
+          <!-- EXPORT SECTION -->
+          <div id="exportSection" class="export-section hidden">
+            <h3>📥 Export Results</h3>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+              <button class="btn-secondary" id="exportExcelBtn" style="flex: 1;">
+                📊 Excel
+              </button>
+              <button class="btn-secondary" id="exportPdfBtn" style="flex: 1;">
+                📄 PDF
+              </button>
+            </div>
+          </div>
+
           <!-- ROUND SELECTOR -->
           <div id="roundSelector" class="round-selector hidden">
             <h3>🎮 Manage Rounds</h3>
@@ -143,6 +156,8 @@
     </div>
 
     <script src="https://cdn.socket.io/4.5.4/socket.io.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="organizer-script.js"></script>
   </body>
 </html>

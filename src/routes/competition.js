@@ -101,12 +101,39 @@ router.get('/my-competitions', auth, async (req, res) => {
 });
 
 // GET COMPETITION BY ID
-router.get('/compition/:compitionid', async (req, res) => {
+router.get('/competition/:competitionId', async (req, res) => {
   try {
-    const compid = await Competition.findOne({ _id: req.params.compitionid });
-    res.json({ compid });
+    const competition = await Competition.findById(req.params.competitionId);
+    if (!competition) {
+      return res.status(404).json({ error: 'Competition not found' });
+    }
+    res.json({ competition });
   } catch (error) {
+    console.error('Fetch competition error:', error);
     res.status(500).json({ error: 'Failed to fetch competition' });
+  }
+});
+
+// GET COMPETITION RANKINGS
+router.get('/competition/:competitionId/rankings', async (req, res) => {
+  try {
+    const competition = await Competition.findById(req.params.competitionId)
+      .select('name code finalRankings status');
+    
+    if (!competition) {
+      return res.status(404).json({ error: 'Competition not found' });
+    }
+
+    res.json({
+      success: true,
+      name: competition.name,
+      code: competition.code,
+      rankings: competition.finalRankings,
+      status: competition.status
+    });
+  } catch (error) {
+    console.error('Fetch rankings error:', error);
+    res.status(500).json({ error: 'Failed to fetch rankings' });
   }
 });
 

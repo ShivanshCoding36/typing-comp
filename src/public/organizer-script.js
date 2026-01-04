@@ -36,6 +36,9 @@ const participantCountDisplay = document.getElementById('participantCountDisplay
 const compInfo = document.getElementById('compInfo');
 const compNameDisplay = document.getElementById('compNameDisplay');
 const statusDisplay = document.getElementById('statusDisplay');
+const exportSection = document.getElementById('exportSection');
+const exportExcelBtn = document.getElementById('exportExcelBtn');
+const exportPdfBtn = document.getElementById('exportPdfBtn');
 
 let selectedRound = null;
 
@@ -317,6 +320,12 @@ socket.on('roundEnded', (data) => {
 
 socket.on('finalResults', (data) => {
   console.log('Final Results:', data.rankings);
+  statusDisplay.textContent = 'Completed';
+  statusDisplay.className = 'status-badge completed';
+  
+  // Show export section
+  exportSection.classList.remove('hidden');
+  
   leaderboardContainer.innerHTML = `
     <h4>🏆 Final Rankings 🏆</h4>
     ${data.rankings.map((item, index) => {
@@ -358,5 +367,116 @@ document.getElementById('logoutBtn').addEventListener('click', () => {
   if (confirm('Are you sure you want to logout?')) {
     localStorage.clear();
     window.location.href = '/login';
+  }
+});
+
+// Export Functionality
+async function fetchRankings() {
+  try {
+    const response = await fetch(`/api/competition/${competitionId}/rankings`, {
+      headers: getAuthHeaders()
+    });
+    const data = await response.json();
+    if (data.success) {
+      return data;
+    }
+    throw new Error(data.error || 'Failed to fetch rankings');
+  } catch (error) {
+    console.error('Export error:', error);
+    alert('Error fetching rankings for export: ' + error.message);
+    return null;
+  }
+}
+
+exportExcelBtn.addEventListener('click', async () => {
+  const data = await fetchRankings();
+  if (!data) return;
+
+  try {
+    const sheetData = [
+      [data.name],
+      ['Generated on', new Date().toLocaleString()],
+      [],
+      ['Rank', 'Participant Name', 'Average WPM', 'Average Accuracy (%)', 'Total Rounds Completed', 'Highest WPM', 'Lowest WPM']
+    ];
+
+    data.rankings.forEach(item => {
+      sheetData.push([
+        item.rank,
+        item.participantName,
+        item.averageWpm,
+        item.averageAccuracy,
+        item.totalRoundsCompleted,
+        item.highestWpm,
+        item.lowestWpm
+      ]);
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet(sheetData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Rankings');
+    XLSX.writeFile(wb, `${data.code}_rankings_${new Date().toISOString().split('T')[0]}.xlsx`);
+  } catch (error) {
+    alert('Error generating Excel: ' + error.message);
+  }
+});
+
+exportPdfBtn.addEventListener('click', async () => {
+  const data = await fetchRankings();
+  if (!data) return;
+
+  try {
+    const element = document.createElement('div');
+    element.style.padding = '20px';
+    element.style.fontFamily = 'Arial, sans-serif';
+    element.style.color = '#000000'; // Force black text for PDF
+    element.style.backgroundColor = '#ffffff'; // Force white background for PDF
+
+    let html = `
+      <div style="text-align: center; margin-bottom: 30px;">
+        <h1 style="color: #218080; margin: 10px 0;">${data.name}</h1>
+        <p style="color: #666; margin: 5px 0;">Competition Code: ${data.code}</p>
+        <p style="color: #999; font-size: 12px;">Generated on ${new Date().toLocaleString()}</p>
+      </div>
+      <table style="width: 100%; border-collapse: collapse; margin-top: 20px; color: #000000;">
+        <thead>
+          <tr style="background-color: #218080; color: #ffffff;">
+            <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Rank</th>
+            <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Participant Name</th>
+            <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">Avg WPM</th>
+            <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">Accuracy</th>
+            <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">Rounds</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    data.rankings.forEach((item, index) => {
+      const rowBg = index % 2 === 0 ? '#f9f9f9' : '#ffffff';
+      html += `
+        <tr style="background-color: ${rowBg}; color: #000000;">
+          <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">${item.rank}</td>
+          <td style="padding: 10px; border: 1px solid #ddd;">${item.participantName}</td>
+          <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${item.averageWpm}</td>
+          <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${item.averageAccuracy}%</td>
+          <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${item.totalRoundsCompleted}</td>
+        </tr>
+      `;
+    });
+
+    html += `</tbody></table>`;
+    element.innerHTML = html;
+
+    const options = {
+      margin: 10,
+      filename: `${data.code}_rankings.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { orientation: 'landscape', unit: 'mm', format: 'a4' }
+    };
+
+    html2pdf().set(options).from(element).save();
+  } catch (error) {
+    alert('Error generating PDF: ' + error.message);
   }
 });

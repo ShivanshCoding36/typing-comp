@@ -8,7 +8,7 @@
 - ✅ Real-time leaderboard updates
 - ✅ Live participant count tracking
 - ✅ View round results and final rankings
-- ✅ Export competition data (planned)
+- ✅ Export competition data (Excel & PDF)
 
 ## Participant Features
 - ✅ Join with competition code and name
