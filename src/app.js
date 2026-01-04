@@ -25,6 +25,11 @@ const limiter = rateLimit({
 
 app.use(limiter);
 
+// API Documentation
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -32,29 +37,28 @@ app.use(requestLogger);
 
 logger.info('✓ Express app initialized');
 
-
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api', require('./routes/competition'));
 
 // Static files
-app.use(express.static(path.join(__dirname, "./public")));
+app.use(express.static(path.join(__dirname, './public')));
 
 // Fallback route
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "./public/participant.html"));
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/participant.html'));
 });
 
 app.get('/organizer', (req, res) => {
-  res.sendFile(path.join(__dirname, "./public/organizer.html"));
-})
+  res.sendFile(path.join(__dirname, './public/organizer.html'));
+});
 
 app.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, "./public/login.html"));
-})
+  res.sendFile(path.join(__dirname, './public/login.html'));
+});
 
 app.get('/register', (req, res) => {
-  res.sendFile(path.join(__dirname, "./public/register.html"));
-})
+  res.sendFile(path.join(__dirname, './public/register.html'));
+});
 
 module.exports = app;
