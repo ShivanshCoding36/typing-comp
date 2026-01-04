@@ -5,7 +5,11 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "test": "jest"
+  },
+  "jest": {
+    "testEnvironment": "node"
   },
   "keywords": [
     "typing",
@@ -25,6 +29,8 @@
     "winston": "^3.18.3"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "jest": "^30.2.0",
+    "nodemon": "^2.0.20",
+    "supertest": "^7.1.4"
   }
 }
