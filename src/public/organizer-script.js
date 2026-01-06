@@ -15,7 +15,7 @@ if (!authToken) {
 function getAuthHeaders() {
   return {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${authToken}`
+    Authorization: `Bearer ${authToken}`,
   };
 }
 
@@ -32,7 +32,9 @@ const roundButtonsList = document.getElementById('roundButtonsList');
 const startRoundBtn = document.getElementById('startRoundBtn');
 const leaderboardContainer = document.getElementById('leaderboardContainer');
 const roundStatus = document.getElementById('roundStatus');
-const participantCountDisplay = document.getElementById('participantCountDisplay');
+const participantCountDisplay = document.getElementById(
+  'participantCountDisplay'
+);
 const compInfo = document.getElementById('compInfo');
 const compNameDisplay = document.getElementById('compNameDisplay');
 const statusDisplay = document.getElementById('statusDisplay');
@@ -49,7 +51,7 @@ addRoundBtn.addEventListener('click', () => {
 // Render rounds UI
 function renderRounds() {
   roundsList.innerHTML = '';
-  
+
   rounds.forEach((round, index) => {
     const roundDiv = document.createElement('div');
     roundDiv.className = 'round-item';
@@ -72,7 +74,7 @@ function renderRounds() {
 
     // Character counter
     const textarea = document.getElementById(`text-${index}`);
-    textarea.addEventListener('input', function() {
+    textarea.addEventListener('input', function () {
       document.getElementById(`count-${index}`).textContent = this.value.length;
     });
     document.getElementById(`count-${index}`).textContent = round.text.length;
@@ -89,7 +91,7 @@ function removeRound(index) {
 createCompBtn.addEventListener('click', async () => {
   const compName = compNameInput.value.trim();
   const compDescription = compDescriptionInput.value.trim();
-  
+
   if (!compName) {
     alert('Please enter competition name');
     return;
@@ -103,10 +105,10 @@ createCompBtn.addEventListener('click', async () => {
   // Collect updated rounds
   rounds = rounds.map((round, index) => ({
     text: document.getElementById(`text-${index}`).value.trim(),
-    duration: parseInt(document.getElementById(`duration-${index}`).value)
+    duration: parseInt(document.getElementById(`duration-${index}`).value),
   }));
 
-  if (rounds.some(r => !r.text || r.duration < 10)) {
+  if (rounds.some((r) => !r.text || r.duration < 10)) {
     alert('All rounds must have text and duration >= 10s');
     return;
   }
@@ -115,11 +117,11 @@ createCompBtn.addEventListener('click', async () => {
     const response = await fetch('/api/create', {
       method: 'POST',
       headers: getAuthHeaders(),
-      body: JSON.stringify({ 
-        name: compName, 
+      body: JSON.stringify({
+        name: compName,
         description: compDescription,
-        rounds 
-      })
+        rounds,
+      }),
     });
 
     const data = await response.json();
@@ -140,11 +142,11 @@ createCompBtn.addEventListener('click', async () => {
       document.getElementById('setupForm').classList.add('hidden');
       codeDisplay.classList.remove('hidden');
       codeDisplay.classList.add('show');
-      
+
       // Show control panel elements
       roundSelector.classList.remove('hidden');
       compInfo.classList.remove('hidden');
-      
+
       compNameDisplay.textContent = compName;
       statusDisplay.textContent = 'Ready';
 
@@ -153,7 +155,7 @@ createCompBtn.addEventListener('click', async () => {
 
       socket.emit('organizerJoin', {
         competitionId,
-        code: data.code
+        code: data.code,
       });
     } else {
       alert('Failed to create competition');
@@ -175,29 +177,31 @@ function renderRoundButtons() {
     btn.disabled = isCompleted;
     btn.style.opacity = isCompleted ? '0.5' : '1';
     btn.style.cursor = isCompleted ? 'not-allowed' : 'pointer';
-    
+
     btn.addEventListener('click', () => {
       selectedRound = index;
-      
+
       // Remove previous selection
-      document.querySelectorAll('.round-btn').forEach(b => b.classList.remove('active'));
+      document
+        .querySelectorAll('.round-btn')
+        .forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
-      
+
       // Update round details
-      document.getElementById('selectedRoundText').textContent = 
+      document.getElementById('selectedRoundText').textContent =
         `📄 ${round.text.substring(0, 100)}...`;
-      document.getElementById('selectedRoundTime').textContent = 
+      document.getElementById('selectedRoundTime').textContent =
         `⏱️ Duration: ${round.duration} seconds`;
-      
+
       startRoundBtn.disabled = isCompleted;
     });
 
     if (index === 0) {
       btn.classList.add('active');
       selectedRound = 0;
-      document.getElementById('selectedRoundText').textContent = 
+      document.getElementById('selectedRoundText').textContent =
         `📄 ${round.text.substring(0, 100)}...`;
-      document.getElementById('selectedRoundTime').textContent = 
+      document.getElementById('selectedRoundTime').textContent =
         `⏱️ Duration: ${round.duration} seconds`;
       startRoundBtn.disabled = false;
     }
@@ -220,7 +224,7 @@ startRoundBtn.addEventListener('click', () => {
 
   socket.emit('startRound', {
     competitionId,
-    roundIndex: selectedRound
+    roundIndex: selectedRound,
   });
 
   startRoundBtn.disabled = true;
@@ -238,17 +242,17 @@ function showRoundStatus(roundIndex) {
   const timerInterval = setInterval(() => {
     timeLeft--;
     document.getElementById('roundTimer').textContent = timeLeft;
-    
+
     const progress = ((duration - timeLeft) / duration) * 100;
     document.getElementById('progressFill').style.width = progress + '%';
 
     if (timeLeft <= 0) {
       clearInterval(timerInterval);
       roundStatus.classList.add('hidden');
-      
+
       // Mark round as completed
       completedRounds.add(roundIndex);
-      
+
       // Disable the round button
       const roundButtons = document.querySelectorAll('.round-btn');
       if (roundButtons[roundIndex]) {
@@ -257,7 +261,7 @@ function showRoundStatus(roundIndex) {
         roundButtons[roundIndex].style.opacity = '0.5';
         roundButtons[roundIndex].style.cursor = 'not-allowed';
       }
-      
+
       // Disable start button if this round was selected
       if (selectedRound === roundIndex) {
         startRoundBtn.disabled = true;
@@ -282,7 +286,9 @@ socket.on('leaderboardUpdate', (data) => {
   const leaderboard = data.leaderboard;
   leaderboardContainer.innerHTML = `
     <h4>🏁 Live Round ${data.roundIndex + 1}</h4>
-    ${leaderboard.map((item, index) => `
+    ${leaderboard
+      .map(
+        (item, index) => `
       <div class="leaderboard-item top-${index < 3 ? index + 1 : ''}">
         <span class="leaderboard-rank">#${index + 1}</span>
         <span class="leaderboard-name">${item.name}</span>
@@ -293,14 +299,18 @@ socket.on('leaderboardUpdate', (data) => {
           <span class="text-yellow">⌫ ${item.backspaces ?? 0}</span>
         </span>
       </div>
-    `).join('')}
+    `
+      )
+      .join('')}
   `;
 });
 
 socket.on('roundEnded', (data) => {
   leaderboardContainer.innerHTML = `
     <h4>✅ Round ${data.roundIndex + 1} - Final Results</h4>
-    ${data.leaderboard.map((item, index) => `
+    ${data.leaderboard
+      .map(
+        (item, index) => `
       <div class="leaderboard-item top-${index < 3 ? index + 1 : ''}">
         <span class="leaderboard-rank">#${index + 1}</span>
         <span class="leaderboard-name">${item.name}</span>
@@ -311,7 +321,9 @@ socket.on('roundEnded', (data) => {
           <span class="text-yellow">⌫ ${item.backspaces ?? 0}</span>
         </span>
       </div>
-    `).join('')}
+    `
+      )
+      .join('')}
   `;
 });
 
@@ -319,10 +331,11 @@ socket.on('finalResults', (data) => {
   console.log('Final Results:', data.rankings);
   leaderboardContainer.innerHTML = `
     <h4>🏆 Final Rankings 🏆</h4>
-    ${data.rankings.map((item, index) => {
-      const medals = ['🥇', '🥈', '🥉'];
-      const medal = medals[index] || `#${index + 1}`;
-      return `
+    ${data.rankings
+      .map((item, index) => {
+        const medals = ['🥇', '🥈', '🥉'];
+        const medal = medals[index] || `#${index + 1}`;
+        return `
         <div class="leaderboard-item final-rank">
           <span class="medal">${medal}</span>
           <span class="leaderboard-name">${item.name}</span>
@@ -334,7 +347,8 @@ socket.on('finalResults', (data) => {
           </span>
         </div>
       `;
-    }).join('')}
+      })
+      .join('')}
   `;
 });
 

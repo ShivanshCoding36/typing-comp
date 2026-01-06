@@ -1,8 +1,14 @@
 const { updateAndBroadcastLeaderboard } = require('../utils/leaderboard');
 
 async function handleProgress(socket, io, data, activeCompetitions) {
-  const { competitionId, correctChars, totalChars, errors = 0, backspaces = 0 } = data;
-  
+  const {
+    competitionId,
+    correctChars,
+    totalChars,
+    errors = 0,
+    backspaces = 0,
+  } = data;
+
   try {
     const compData = activeCompetitions.get(competitionId);
     if (!compData || !compData.roundInProgress) return;
@@ -14,13 +20,13 @@ async function handleProgress(socket, io, data, activeCompetitions) {
     const elapsedSeconds = (Date.now() - startTime) / 1000;
 
     // Compute WPM and Accuracy
-    const wpm = elapsedSeconds > 0
-      ? Math.round((correctChars / 5) / (elapsedSeconds / 60))
-      : 0;
+    const wpm =
+      elapsedSeconds > 0
+        ? Math.round(correctChars / 5 / (elapsedSeconds / 60))
+        : 0;
 
-    const accuracy = totalChars > 0
-      ? Math.round((correctChars / totalChars) * 100)
-      : 100;
+    const accuracy =
+      totalChars > 0 ? Math.round((correctChars / totalChars) * 100) : 100;
 
     const incorrectChars = totalChars - correctChars;
 
@@ -33,11 +39,14 @@ async function handleProgress(socket, io, data, activeCompetitions) {
       errors,
       backspaces,
       testStartTime: startTime,
-      elapsedSeconds
+      elapsedSeconds,
     };
 
     // Update leaderboard every 1 second
-    if (!compData.lastLeaderboardUpdate || Date.now() - compData.lastLeaderboardUpdate > 1000) {
+    if (
+      !compData.lastLeaderboardUpdate ||
+      Date.now() - compData.lastLeaderboardUpdate > 1000
+    ) {
       updateAndBroadcastLeaderboard(competitionId, compData, io);
       compData.lastLeaderboardUpdate = Date.now();
     }

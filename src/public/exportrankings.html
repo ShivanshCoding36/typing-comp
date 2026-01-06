@@ -1,470 +1,491 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Rankings Exporter - Excel & PDF</title>
     <style>
-        :root {
-            --color-white: rgba(255, 255, 255, 1);
-            --color-black: rgba(0, 0, 0, 1);
-            --color-cream-50: rgba(252, 252, 249, 1);
-            --color-cream-100: rgba(255, 255, 253, 1);
-            --color-gray-200: rgba(245, 245, 245, 1);
-            --color-gray-300: rgba(167, 169, 169, 1);
-            --color-gray-400: rgba(119, 124, 124, 1);
-            --color-slate-500: rgba(98, 108, 113, 1);
-            --color-brown-600: rgba(94, 82, 64, 1);
-            --color-charcoal-700: rgba(31, 33, 33, 1);
-            --color-charcoal-800: rgba(38, 40, 40, 1);
-            --color-slate-900: rgba(19, 52, 59, 1);
-            --color-teal-300: rgba(50, 184, 198, 1);
-            --color-teal-400: rgba(45, 166, 178, 1);
-            --color-teal-500: rgba(33, 128, 141, 1);
-            --color-teal-600: rgba(29, 116, 128, 1);
-            --color-teal-700: rgba(26, 104, 115, 1);
-            --color-red-400: rgba(255, 84, 89, 1);
-            --color-red-500: rgba(192, 21, 47, 1);
-            --color-orange-400: rgba(230, 129, 97, 1);
-            --color-orange-500: rgba(168, 75, 47, 1);
-            
-            --color-brown-600-rgb: 94, 82, 64;
-            --color-teal-500-rgb: 33, 128, 141;
-            --color-slate-900-rgb: 19, 52, 59;
-            --color-slate-500-rgb: 98, 108, 113;
-            --color-red-500-rgb: 192, 21, 47;
-            --color-red-400-rgb: 255, 84, 89;
-            --color-orange-500-rgb: 168, 75, 47;
-            --color-orange-400-rgb: 230, 129, 97;
-            
-            --color-background: var(--color-cream-50);
-            --color-surface: var(--color-cream-100);
-            --color-text: var(--color-slate-900);
-            --color-text-secondary: var(--color-slate-500);
-            --color-primary: var(--color-teal-500);
-            --color-primary-hover: var(--color-teal-600);
-            --color-primary-active: var(--color-teal-700);
-            --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
-            --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
-            --color-secondary-active: rgba(var(--color-brown-600-rgb), 0.25);
-            --color-border: rgba(var(--color-brown-600-rgb), 0.2);
-            --color-btn-primary-text: var(--color-cream-50);
-            --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
-            --color-card-border-inner: rgba(var(--color-brown-600-rgb), 0.12);
-            --color-error: var(--color-red-500);
-            --color-success: var(--color-teal-500);
-            --color-warning: var(--color-orange-500);
-            --color-info: var(--color-slate-500);
-            --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
-            
-            --font-family-base: "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            --font-family-mono: "Berkeley Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-            --font-size-xs: 11px;
-            --font-size-sm: 12px;
-            --font-size-base: 14px;
-            --font-size-md: 14px;
-            --font-size-lg: 16px;
-            --font-size-xl: 18px;
-            --font-size-2xl: 20px;
-            --font-size-3xl: 24px;
-            --font-size-4xl: 30px;
-            --font-weight-normal: 400;
-            --font-weight-medium: 500;
-            --font-weight-semibold: 550;
-            --font-weight-bold: 600;
-            --line-height-tight: 1.2;
-            --line-height-normal: 1.5;
-            --letter-spacing-tight: -0.01em;
-            
-            --space-0: 0;
-            --space-1: 1px;
-            --space-2: 2px;
-            --space-4: 4px;
-            --space-6: 6px;
-            --space-8: 8px;
-            --space-10: 10px;
-            --space-12: 12px;
-            --space-16: 16px;
-            --space-20: 20px;
-            --space-24: 24px;
-            --space-32: 32px;
-            
-            --radius-sm: 6px;
-            --radius-base: 8px;
-            --radius-md: 10px;
-            --radius-lg: 12px;
-            --radius-full: 9999px;
-            
-            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.02);
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
-            
-            --duration-fast: 150ms;
-            --duration-normal: 250ms;
-            --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
-            
-            --container-sm: 640px;
-            --container-md: 768px;
-            --container-lg: 1024px;
-            --container-xl: 1280px;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        html {
-            font-size: var(--font-size-base);
-            font-family: var(--font-family-base);
-            line-height: var(--line-height-normal);
-            color: var(--color-text);
-            background-color: var(--color-background);
-            -webkit-font-smoothing: antialiased;
-        }
-        
-        body {
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-        }
-        
-        .container {
-            max-width: var(--container-lg);
-            margin: 0 auto;
-            padding: var(--space-32);
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: var(--space-32);
-            animation: slideDown 0.5s ease-out;
-        }
-        
-        .header h1 {
-            font-size: var(--font-size-4xl);
-            margin-bottom: var(--space-10);
-            color: var(--color-primary);
-            font-weight: var(--font-weight-bold);
-            letter-spacing: var(--letter-spacing-tight);
-        }
-        
-        .header p {
-            color: var(--color-text-secondary);
-            font-size: var(--font-size-lg);
-            margin: 0;
-        }
-        
+      :root {
+        --color-white: rgba(255, 255, 255, 1);
+        --color-black: rgba(0, 0, 0, 1);
+        --color-cream-50: rgba(252, 252, 249, 1);
+        --color-cream-100: rgba(255, 255, 253, 1);
+        --color-gray-200: rgba(245, 245, 245, 1);
+        --color-gray-300: rgba(167, 169, 169, 1);
+        --color-gray-400: rgba(119, 124, 124, 1);
+        --color-slate-500: rgba(98, 108, 113, 1);
+        --color-brown-600: rgba(94, 82, 64, 1);
+        --color-charcoal-700: rgba(31, 33, 33, 1);
+        --color-charcoal-800: rgba(38, 40, 40, 1);
+        --color-slate-900: rgba(19, 52, 59, 1);
+        --color-teal-300: rgba(50, 184, 198, 1);
+        --color-teal-400: rgba(45, 166, 178, 1);
+        --color-teal-500: rgba(33, 128, 141, 1);
+        --color-teal-600: rgba(29, 116, 128, 1);
+        --color-teal-700: rgba(26, 104, 115, 1);
+        --color-red-400: rgba(255, 84, 89, 1);
+        --color-red-500: rgba(192, 21, 47, 1);
+        --color-orange-400: rgba(230, 129, 97, 1);
+        --color-orange-500: rgba(168, 75, 47, 1);
+
+        --color-brown-600-rgb: 94, 82, 64;
+        --color-teal-500-rgb: 33, 128, 141;
+        --color-slate-900-rgb: 19, 52, 59;
+        --color-slate-500-rgb: 98, 108, 113;
+        --color-red-500-rgb: 192, 21, 47;
+        --color-red-400-rgb: 255, 84, 89;
+        --color-orange-500-rgb: 168, 75, 47;
+        --color-orange-400-rgb: 230, 129, 97;
+
+        --color-background: var(--color-cream-50);
+        --color-surface: var(--color-cream-100);
+        --color-text: var(--color-slate-900);
+        --color-text-secondary: var(--color-slate-500);
+        --color-primary: var(--color-teal-500);
+        --color-primary-hover: var(--color-teal-600);
+        --color-primary-active: var(--color-teal-700);
+        --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+        --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+        --color-secondary-active: rgba(var(--color-brown-600-rgb), 0.25);
+        --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+        --color-btn-primary-text: var(--color-cream-50);
+        --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+        --color-card-border-inner: rgba(var(--color-brown-600-rgb), 0.12);
+        --color-error: var(--color-red-500);
+        --color-success: var(--color-teal-500);
+        --color-warning: var(--color-orange-500);
+        --color-info: var(--color-slate-500);
+        --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
+
+        --font-family-base:
+          'Geist', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+          Roboto, sans-serif;
+        --font-family-mono:
+          'Berkeley Mono', ui-monospace, SFMono-Regular, Menlo, Monaco,
+          Consolas, monospace;
+        --font-size-xs: 11px;
+        --font-size-sm: 12px;
+        --font-size-base: 14px;
+        --font-size-md: 14px;
+        --font-size-lg: 16px;
+        --font-size-xl: 18px;
+        --font-size-2xl: 20px;
+        --font-size-3xl: 24px;
+        --font-size-4xl: 30px;
+        --font-weight-normal: 400;
+        --font-weight-medium: 500;
+        --font-weight-semibold: 550;
+        --font-weight-bold: 600;
+        --line-height-tight: 1.2;
+        --line-height-normal: 1.5;
+        --letter-spacing-tight: -0.01em;
+
+        --space-0: 0;
+        --space-1: 1px;
+        --space-2: 2px;
+        --space-4: 4px;
+        --space-6: 6px;
+        --space-8: 8px;
+        --space-10: 10px;
+        --space-12: 12px;
+        --space-16: 16px;
+        --space-20: 20px;
+        --space-24: 24px;
+        --space-32: 32px;
+
+        --radius-sm: 6px;
+        --radius-base: 8px;
+        --radius-md: 10px;
+        --radius-lg: 12px;
+        --radius-full: 9999px;
+
+        --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.02);
+        --shadow-sm:
+          0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+        --shadow-md:
+          0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+        --shadow-lg:
+          0 10px 15px -3px rgba(0, 0, 0, 0.04),
+          0 4px 6px -2px rgba(0, 0, 0, 0.02);
+
+        --duration-fast: 150ms;
+        --duration-normal: 250ms;
+        --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+
+        --container-sm: 640px;
+        --container-md: 768px;
+        --container-lg: 1024px;
+        --container-xl: 1280px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        font-size: var(--font-size-base);
+        font-family: var(--font-family-base);
+        line-height: var(--line-height-normal);
+        color: var(--color-text);
+        background-color: var(--color-background);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+      }
+
+      .container {
+        max-width: var(--container-lg);
+        margin: 0 auto;
+        padding: var(--space-32);
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: var(--space-32);
+        animation: slideDown 0.5s ease-out;
+      }
+
+      .header h1 {
+        font-size: var(--font-size-4xl);
+        margin-bottom: var(--space-10);
+        color: var(--color-primary);
+        font-weight: var(--font-weight-bold);
+        letter-spacing: var(--letter-spacing-tight);
+      }
+
+      .header p {
+        color: var(--color-text-secondary);
+        font-size: var(--font-size-lg);
+        margin: 0;
+      }
+
+      .content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-32);
+      }
+
+      @media (max-width: 768px) {
         .content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-32);
+          grid-template-columns: 1fr;
         }
-        
-        @media (max-width: 768px) {
-            .content {
-                grid-template-columns: 1fr;
-            }
+      }
+
+      .section {
+        background: var(--color-surface);
+        border: 1px solid var(--color-card-border);
+        border-radius: var(--radius-lg);
+        padding: var(--space-32);
+        box-shadow: var(--shadow-sm);
+        animation: slideUp 0.6s ease-out;
+      }
+
+      .section h2 {
+        font-size: var(--font-size-2xl);
+        margin-bottom: var(--space-24);
+        color: var(--color-primary);
+        font-weight: var(--font-weight-semibold);
+      }
+
+      .form-group {
+        margin-bottom: var(--space-20);
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: var(--space-8);
+        color: var(--color-text-secondary);
+        font-weight: var(--font-weight-medium);
+        font-size: var(--font-size-sm);
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: var(--space-12) var(--space-16);
+        background: var(--color-background);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-base);
+        color: var(--color-text);
+        font-size: var(--font-size-md);
+        transition: all var(--duration-normal) var(--ease-standard);
+        font-family: var(--font-family-base);
+      }
+
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+        border-color: var(--color-primary);
+      }
+
+      .form-group textarea {
+        resize: vertical;
+        min-height: 100px;
+        font-family: var(--font-family-mono);
+      }
+
+      .btn {
+        padding: var(--space-12) var(--space-24);
+        border: none;
+        border-radius: var(--radius-base);
+        font-size: var(--font-size-base);
+        font-weight: var(--font-weight-semibold);
+        cursor: pointer;
+        transition: all var(--duration-normal) var(--ease-standard);
+        font-family: var(--font-family-base);
+        width: 100%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-8);
+      }
+
+      .btn-primary {
+        background: var(--color-primary);
+        color: var(--color-btn-primary-text);
+      }
+
+      .btn-primary:hover:not(:disabled) {
+        background: var(--color-primary-hover);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
+
+      .btn-primary:active:not(:disabled) {
+        background: var(--color-primary-active);
+        transform: translateY(0);
+      }
+
+      .btn-primary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .btn-secondary {
+        background: var(--color-secondary);
+        color: var(--color-text);
+        border: 1px solid var(--color-border);
+        margin-bottom: var(--space-16);
+      }
+
+      .btn-secondary:hover {
+        background: var(--color-secondary-hover);
+      }
+
+      .btn-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-16);
+      }
+
+      .btn-group button {
+        width: 100%;
+      }
+
+      .preview-container {
+        margin-top: var(--space-24);
+        background: var(--color-background);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-base);
+        padding: var(--space-16);
+        max-height: 400px;
+        overflow-y: auto;
+      }
+
+      .preview-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: var(--font-size-sm);
+      }
+
+      .preview-table thead {
+        background: var(--color-secondary);
+      }
+
+      .preview-table th,
+      .preview-table td {
+        padding: var(--space-12);
+        text-align: left;
+        border-bottom: 1px solid var(--color-border);
+        color: var(--color-text);
+      }
+
+      .preview-table th {
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-primary);
+      }
+
+      .preview-table tbody tr:nth-child(even) {
+        background: var(--color-surface);
+      }
+
+      .preview-table tbody tr:hover {
+        background: var(--color-secondary);
+      }
+
+      .status-message {
+        padding: var(--space-16);
+        border-radius: var(--radius-base);
+        margin-bottom: var(--space-16);
+        display: none;
+        font-weight: var(--font-weight-medium);
+      }
+
+      .status-message.show {
+        display: block;
+        animation: slideDown 0.3s ease-out;
+      }
+
+      .status-message.success {
+        background: rgba(var(--color-success-rgb, 33, 128, 141), 0.15);
+        color: var(--color-success);
+        border: 1px solid rgba(var(--color-success-rgb, 33, 128, 141), 0.3);
+      }
+
+      .status-message.error {
+        background: rgba(var(--color-error-rgb, 192, 21, 47), 0.15);
+        color: var(--color-error);
+        border: 1px solid rgba(var(--color-error-rgb, 192, 21, 47), 0.3);
+      }
+
+      .status-message.info {
+        background: rgba(var(--color-info-rgb, 98, 108, 113), 0.15);
+        color: var(--color-info);
+        border: 1px solid rgba(var(--color-info-rgb, 98, 108, 113), 0.3);
+      }
+
+      .icon {
+        font-size: var(--font-size-lg);
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
         }
-        
-        .section {
-            background: var(--color-surface);
-            border: 1px solid var(--color-card-border);
-            border-radius: var(--radius-lg);
-            padding: var(--space-32);
-            box-shadow: var(--shadow-sm);
-            animation: slideUp 0.6s ease-out;
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
-        
-        .section h2 {
-            font-size: var(--font-size-2xl);
-            margin-bottom: var(--space-24);
-            color: var(--color-primary);
-            font-weight: var(--font-weight-semibold);
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
         }
-        
-        .form-group {
-            margin-bottom: var(--space-20);
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: var(--space-8);
-            color: var(--color-text-secondary);
-            font-weight: var(--font-weight-medium);
-            font-size: var(--font-size-sm);
-        }
-        
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: var(--space-12) var(--space-16);
-            background: var(--color-background);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-base);
-            color: var(--color-text);
-            font-size: var(--font-size-md);
-            transition: all var(--duration-normal) var(--ease-standard);
-            font-family: var(--font-family-base);
-        }
-        
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: 2px solid var(--color-primary);
-            outline-offset: 2px;
-            border-color: var(--color-primary);
-        }
-        
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-            font-family: var(--font-family-mono);
-        }
-        
-        .btn {
-            padding: var(--space-12) var(--space-24);
-            border: none;
-            border-radius: var(--radius-base);
-            font-size: var(--font-size-base);
-            font-weight: var(--font-weight-semibold);
-            cursor: pointer;
-            transition: all var(--duration-normal) var(--ease-standard);
-            font-family: var(--font-family-base);
-            width: 100%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--space-8);
-        }
-        
-        .btn-primary {
-            background: var(--color-primary);
-            color: var(--color-btn-primary-text);
-        }
-        
-        .btn-primary:hover:not(:disabled) {
-            background: var(--color-primary-hover);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-        
-        .btn-primary:active:not(:disabled) {
-            background: var(--color-primary-active);
-            transform: translateY(0);
-        }
-        
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        
-        .btn-secondary {
-            background: var(--color-secondary);
-            color: var(--color-text);
-            border: 1px solid var(--color-border);
-            margin-bottom: var(--space-16);
-        }
-        
-        .btn-secondary:hover {
-            background: var(--color-secondary-hover);
-        }
-        
-        .btn-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-16);
-        }
-        
-        .btn-group button {
-            width: 100%;
-        }
-        
-        .preview-container {
-            margin-top: var(--space-24);
-            background: var(--color-background);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-base);
-            padding: var(--space-16);
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        
-        .preview-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: var(--font-size-sm);
-        }
-        
-        .preview-table thead {
-            background: var(--color-secondary);
-        }
-        
-        .preview-table th,
-        .preview-table td {
-            padding: var(--space-12);
-            text-align: left;
-            border-bottom: 1px solid var(--color-border);
-            color: var(--color-text);
-        }
-        
-        .preview-table th {
-            font-weight: var(--font-weight-semibold);
-            color: var(--color-primary);
-        }
-        
-        .preview-table tbody tr:nth-child(even) {
-            background: var(--color-surface);
-        }
-        
-        .preview-table tbody tr:hover {
-            background: var(--color-secondary);
-        }
-        
-        .status-message {
-            padding: var(--space-16);
-            border-radius: var(--radius-base);
-            margin-bottom: var(--space-16);
-            display: none;
-            font-weight: var(--font-weight-medium);
-        }
-        
-        .status-message.show {
-            display: block;
-            animation: slideDown 0.3s ease-out;
-        }
-        
-        .status-message.success {
-            background: rgba(var(--color-success-rgb, 33, 128, 141), 0.15);
-            color: var(--color-success);
-            border: 1px solid rgba(var(--color-success-rgb, 33, 128, 141), 0.3);
-        }
-        
-        .status-message.error {
-            background: rgba(var(--color-error-rgb, 192, 21, 47), 0.15);
-            color: var(--color-error);
-            border: 1px solid rgba(var(--color-error-rgb, 192, 21, 47), 0.3);
-        }
-        
-        .status-message.info {
-            background: rgba(var(--color-info-rgb, 98, 108, 113), 0.15);
-            color: var(--color-info);
-            border: 1px solid rgba(var(--color-info-rgb, 98, 108, 113), 0.3);
-        }
-        
-        .icon {
-            font-size: var(--font-size-lg);
-        }
-        
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="header">
-            <h1>📊 Rankings Exporter</h1>
-            <p>Export competition final rankings as Excel or PDF</p>
-        </div>
-        
-        <div class="content">
-            <!-- Input Section -->
-            <div class="section">
-                <h2>Input Data</h2>
-                
-                <div id="statusMessage" class="status-message"></div>
-                
-                <div class="form-group">
-                    <label for="competitionCode">Competition Code (Optional)</label>
-                    <input type="text" id="competitionCode" placeholder="e.g., TECH2024" value="DEMO">
-                </div>
-                
-                <div class="form-group">
-                    <label for="rankingsData">Final Rankings (JSON)</label>
-                    <textarea id="rankingsData" placeholder='[{"rank": 1, "participantName": "Alice", "averageWpm": 85.5, "averageAccuracy": 98.2, "totalRoundsCompleted": 3, "highestWpm": 92, "lowestWpm": 78}]'>[
+      <div class="header">
+        <h1>📊 Rankings Exporter</h1>
+        <p>Export competition final rankings as Excel or PDF</p>
+      </div>
+
+      <div class="content">
+        <!-- Input Section -->
+        <div class="section">
+          <h2>Input Data</h2>
+
+          <div id="statusMessage" class="status-message"></div>
+
+          <div class="form-group">
+            <label for="competitionCode">Competition Code (Optional)</label>
+            <input
+              type="text"
+              id="competitionCode"
+              placeholder="e.g., TECH2024"
+              value="DEMO"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="rankingsData">Final Rankings (JSON)</label>
+            <textarea
+              id="rankingsData"
+              placeholder='[{"rank": 1, "participantName": "Alice", "averageWpm": 85.5, "averageAccuracy": 98.2, "totalRoundsCompleted": 3, "highestWpm": 92, "lowestWpm": 78}]'
+            >
+[
   {"rank": 1, "participantName": "Alice Johnson", "averageWpm": 85.5, "averageAccuracy": 98.2, "totalRoundsCompleted": 3, "highestWpm": 92, "lowestWpm": 78},
   {"rank": 2, "participantName": "Bob Smith", "averageWpm": 78.3, "averageAccuracy": 96.8, "totalRoundsCompleted": 3, "highestWpm": 85, "lowestWpm": 72},
   {"rank": 3, "participantName": "Carol Davis", "averageWpm": 72.1, "averageAccuracy": 95.5, "totalRoundsCompleted": 3, "highestWpm": 78, "lowestWpm": 68},
   {"rank": 4, "participantName": "David Lee", "averageWpm": 65.4, "averageAccuracy": 94.2, "totalRoundsCompleted": 3, "highestWpm": 71, "lowestWpm": 60},
   {"rank": 5, "participantName": "Emma Wilson", "averageWpm": 58.9, "averageAccuracy": 92.1, "totalRoundsCompleted": 3, "highestWpm": 64, "lowestWpm": 54}
-]</textarea>
-                </div>
-                
-                <div class="btn-group">
-                    <button class="btn btn-primary" onclick="downloadExcel()">
-                        <span class="icon">📥</span> Download Excel
-                    </button>
-                    <button class="btn btn-primary" onclick="downloadPDF()">
-                        <span class="icon">📄</span> Download PDF
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Preview Section -->
-            <div class="section">
-                <h2>Preview</h2>
-                <div id="previewContainer" class="preview-container">
-                    <table class="preview-table" id="previewTable">
-                        <thead>
-                            <tr>
-                                <th>Rank</th>
-                                <th>Participant Name</th>
-                                <th>Avg WPM</th>
-                                <th>Accuracy</th>
-                                <th>Rounds</th>
-                                <th>Best WPM</th>
-                                <th>Worst WPM</th>
-                            </tr>
-                        </thead>
-                        <tbody id="previewBody">
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+]</textarea
+            >
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-primary" onclick="downloadExcel()">
+              <span class="icon">📥</span> Download Excel
+            </button>
+            <button class="btn btn-primary" onclick="downloadPDF()">
+              <span class="icon">📄</span> Download PDF
+            </button>
+          </div>
         </div>
+
+        <!-- Preview Section -->
+        <div class="section">
+          <h2>Preview</h2>
+          <div id="previewContainer" class="preview-container">
+            <table class="preview-table" id="previewTable">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Participant Name</th>
+                  <th>Avg WPM</th>
+                  <th>Accuracy</th>
+                  <th>Rounds</th>
+                  <th>Best WPM</th>
+                  <th>Worst WPM</th>
+                </tr>
+              </thead>
+              <tbody id="previewBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    
+
     <script>
-        // Initialize preview on load
-        document.addEventListener('DOMContentLoaded', () => {
-            updatePreview();
-            document.getElementById('rankingsData').addEventListener('change', updatePreview);
-        });
-        
-        function updatePreview() {
-            try {
-                const data = JSON.parse(document.getElementById('rankingsData').value);
-                const tbody = document.getElementById('previewBody');
-                tbody.innerHTML = '';
-                
-                data.forEach(item => {
-                    const row = tbody.insertRow();
-                    row.innerHTML = `
+      // Initialize preview on load
+      document.addEventListener('DOMContentLoaded', () => {
+        updatePreview();
+        document
+          .getElementById('rankingsData')
+          .addEventListener('change', updatePreview);
+      });
+
+      function updatePreview() {
+        try {
+          const data = JSON.parse(
+            document.getElementById('rankingsData').value
+          );
+          const tbody = document.getElementById('previewBody');
+          tbody.innerHTML = '';
+
+          data.forEach((item) => {
+            const row = tbody.insertRow();
+            row.innerHTML = `
                         <td><strong>${item.rank}</strong></td>
                         <td>${escapeHtml(item.participantName)}</td>
                         <td>${item.averageWpm.toFixed(2)}</td>
@@ -473,91 +494,112 @@
                         <td>${item.highestWpm}</td>
                         <td>${item.lowestWpm}</td>
                     `;
-                });
-                
-                showMessage('✓ Data loaded successfully', 'success');
-            } catch (error) {
-                showMessage('✗ Invalid JSON format', 'error');
-            }
+          });
+
+          showMessage('✓ Data loaded successfully', 'success');
+        } catch (error) {
+          showMessage('✗ Invalid JSON format', 'error');
         }
-        
-        function downloadExcel() {
-            try {
-                const competitionCode = document.getElementById('competitionCode').value || 'COMPETITION';
-                const competitionName = document.getElementById('competitionName').value || 'Final Rankings';
-                const data = JSON.parse(document.getElementById('rankingsData').value);
-                
-                // Prepare sheet data
-                const sheetData = [
-                    [competitionName],
-                    ['Generated on', new Date().toLocaleString()],
-                    [],
-                    ['Rank', 'Participant Name', 'Average WPM', 'Average Accuracy (%)', 'Total Rounds Completed', 'Highest WPM', 'Lowest WPM']
-                ];
-                
-                data.forEach(item => {
-                    sheetData.push([
-                        item.rank,
-                        item.participantName,
-                        item.averageWpm,
-                        item.averageAccuracy,
-                        item.totalRoundsCompleted,
-                        item.highestWpm,
-                        item.lowestWpm
-                    ]);
-                });
-                
-                // Create workbook
-                const ws = XLSX.utils.aoa_to_sheet(sheetData);
-                
-                // Set column widths
-                ws['!cols'] = [
-                    { wch: 6 },
-                    { wch: 20 },
-                    { wch: 12 },
-                    { wch: 18 },
-                    { wch: 15 },
-                    { wch: 12 },
-                    { wch: 12 }
-                ];
-                
-                // Style header row (row 4)
-                const headerRow = 4;
-                for (let i = 0; i < 7; i++) {
-                    const cellRef = XLSX.utils.encode_col(i) + headerRow;
-                    if (ws[cellRef]) {
-                        ws[cellRef].s = {
-                            font: { bold: true, color: { rgb: 'FFFFFF' } },
-                            fill: { fgColor: { rgb: '218080' } },
-                            alignment: { horizontal: 'center', vertical: 'center' }
-                        };
-                    }
-                }
-                
-                const wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, 'Rankings');
-                XLSX.writeFile(wb, `${competitionCode}_rankings_${new Date().toISOString().split('T')[0]}.xlsx`);
-                
-                showMessage('✓ Excel file downloaded successfully!', 'success');
-            } catch (error) {
-                showMessage('✗ Error downloading Excel: ' + error.message, 'error');
+      }
+
+      function downloadExcel() {
+        try {
+          const competitionCode =
+            document.getElementById('competitionCode').value || 'COMPETITION';
+          const competitionName =
+            document.getElementById('competitionName').value ||
+            'Final Rankings';
+          const data = JSON.parse(
+            document.getElementById('rankingsData').value
+          );
+
+          // Prepare sheet data
+          const sheetData = [
+            [competitionName],
+            ['Generated on', new Date().toLocaleString()],
+            [],
+            [
+              'Rank',
+              'Participant Name',
+              'Average WPM',
+              'Average Accuracy (%)',
+              'Total Rounds Completed',
+              'Highest WPM',
+              'Lowest WPM',
+            ],
+          ];
+
+          data.forEach((item) => {
+            sheetData.push([
+              item.rank,
+              item.participantName,
+              item.averageWpm,
+              item.averageAccuracy,
+              item.totalRoundsCompleted,
+              item.highestWpm,
+              item.lowestWpm,
+            ]);
+          });
+
+          // Create workbook
+          const ws = XLSX.utils.aoa_to_sheet(sheetData);
+
+          // Set column widths
+          ws['!cols'] = [
+            { wch: 6 },
+            { wch: 20 },
+            { wch: 12 },
+            { wch: 18 },
+            { wch: 15 },
+            { wch: 12 },
+            { wch: 12 },
+          ];
+
+          // Style header row (row 4)
+          const headerRow = 4;
+          for (let i = 0; i < 7; i++) {
+            const cellRef = XLSX.utils.encode_col(i) + headerRow;
+            if (ws[cellRef]) {
+              ws[cellRef].s = {
+                font: { bold: true, color: { rgb: 'FFFFFF' } },
+                fill: { fgColor: { rgb: '218080' } },
+                alignment: { horizontal: 'center', vertical: 'center' },
+              };
             }
+          }
+
+          const wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, 'Rankings');
+          XLSX.writeFile(
+            wb,
+            `${competitionCode}_rankings_${new Date().toISOString().split('T')[0]}.xlsx`
+          );
+
+          showMessage('✓ Excel file downloaded successfully!', 'success');
+        } catch (error) {
+          showMessage('✗ Error downloading Excel: ' + error.message, 'error');
         }
-        
-        function downloadPDF() {
-            try {
-                const competitionCode = document.getElementById('competitionCode').value || 'COMPETITION';
-                const competitionName = document.getElementById('competitionName').value || 'Final Rankings';
-                const data = JSON.parse(document.getElementById('rankingsData').value);
-                
-                // Create PDF content
-                const element = document.createElement('div');
-                element.style.padding = '20px';
-                element.style.backgroundColor = 'white';
-                element.style.color = 'black';
-                element.style.fontFamily = 'Arial, sans-serif';
-                
-                let html = `
+      }
+
+      function downloadPDF() {
+        try {
+          const competitionCode =
+            document.getElementById('competitionCode').value || 'COMPETITION';
+          const competitionName =
+            document.getElementById('competitionName').value ||
+            'Final Rankings';
+          const data = JSON.parse(
+            document.getElementById('rankingsData').value
+          );
+
+          // Create PDF content
+          const element = document.createElement('div');
+          element.style.padding = '20px';
+          element.style.backgroundColor = 'white';
+          element.style.color = 'black';
+          element.style.fontFamily = 'Arial, sans-serif';
+
+          let html = `
                     <div style="text-align: center; margin-bottom: 30px;">
                         <h1 style="color: #218080; margin: 10px 0;">${escapeHtml(competitionName)}</h1>
                         <p style="color: #666; margin: 5px 0;">Competition Code: ${escapeHtml(competitionCode)}</p>
@@ -578,10 +620,10 @@
                         </thead>
                         <tbody>
                 `;
-                
-                data.forEach((item, index) => {
-                    const rowBg = index % 2 === 0 ? '#f9f9f9' : '#ffffff';
-                    html += `
+
+          data.forEach((item, index) => {
+            const rowBg = index % 2 === 0 ? '#f9f9f9' : '#ffffff';
+            html += `
                         <tr style="background-color: ${rowBg};">
                             <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">${item.rank}</td>
                             <td style="padding: 10px; border: 1px solid #ddd;">${escapeHtml(item.participantName)}</td>
@@ -592,53 +634,53 @@
                             <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${item.lowestWpm}</td>
                         </tr>
                     `;
-                });
-                
-                html += `
+          });
+
+          html += `
                         </tbody>
                     </table>
                     <p style="margin-top: 30px; color: #999; font-size: 11px; text-align: center;">
                         This document contains the final rankings for ${escapeHtml(competitionName)}.
                     </p>
                 `;
-                
-                element.innerHTML = html;
-                
-                const options = {
-                    margin: 10,
-                    filename: `${competitionCode}_rankings_${new Date().toISOString().split('T')[0]}.pdf`,
-                    image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { scale: 2 },
-                    jsPDF: { orientation: 'landscape', unit: 'mm', format: 'a4' }
-                };
-                
-                html2pdf().set(options).from(element).save();
-                showMessage('✓ PDF file downloaded successfully!', 'success');
-            } catch (error) {
-                showMessage('✗ Error downloading PDF: ' + error.message, 'error');
-            }
+
+          element.innerHTML = html;
+
+          const options = {
+            margin: 10,
+            filename: `${competitionCode}_rankings_${new Date().toISOString().split('T')[0]}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { orientation: 'landscape', unit: 'mm', format: 'a4' },
+          };
+
+          html2pdf().set(options).from(element).save();
+          showMessage('✓ PDF file downloaded successfully!', 'success');
+        } catch (error) {
+          showMessage('✗ Error downloading PDF: ' + error.message, 'error');
         }
-        
-        function showMessage(text, type) {
-            const msg = document.getElementById('statusMessage');
-            msg.textContent = text;
-            msg.className = `status-message show ${type}`;
-            
-            setTimeout(() => {
-                msg.classList.remove('show');
-            }, 4000);
-        }
-        
-        function escapeHtml(text) {
-            const map = {
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#039;'
-            };
-            return text.replace(/[&<>"']/g, m => map[m]);
-        }
+      }
+
+      function showMessage(text, type) {
+        const msg = document.getElementById('statusMessage');
+        msg.textContent = text;
+        msg.className = `status-message show ${type}`;
+
+        setTimeout(() => {
+          msg.classList.remove('show');
+        }, 4000);
+      }
+
+      function escapeHtml(text) {
+        const map = {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#039;',
+        };
+        return text.replace(/[&<>"']/g, (m) => map[m]);
+      }
     </script>
-</body>
+  </body>
 </html>

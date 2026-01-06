@@ -24,7 +24,9 @@ const joinBtn = document.getElementById('joinBtn');
 const joinError = document.getElementById('joinError');
 const welcomeName = document.getElementById('welcomeName');
 const competitionNameDisplay = document.getElementById('competitionName');
-const participantCountDisplay = document.getElementById('participantCountDisplay');
+const participantCountDisplay = document.getElementById(
+  'participantCountDisplay'
+);
 const typingInput = document.getElementById('typingInput');
 const textDisplay = document.getElementById('textDisplay');
 const wpmDisplay = document.getElementById('wpmDisplay');
@@ -126,13 +128,13 @@ function updateTypingStats() {
   const incorrectChars = totalChars - correctChars;
   const elapsedSeconds = (Date.now() - testStartTime) / 1000;
 
-  const wpm = elapsedSeconds > 0
-    ? Math.round((correctChars / 5) / (elapsedSeconds / 60))
-    : 0;
+  const wpm =
+    elapsedSeconds > 0
+      ? Math.round(correctChars / 5 / (elapsedSeconds / 60))
+      : 0;
 
-  const accuracy = totalChars > 0
-    ? Math.round((correctChars / totalChars) * 100)
-    : 100;
+  const accuracy =
+    totalChars > 0 ? Math.round((correctChars / totalChars) * 100) : 100;
 
   wpmDisplay.textContent = wpm;
   accuracyDisplay.textContent = accuracy + '%';
@@ -251,13 +253,17 @@ socket.on('roundEnded', (data) => {
   testScreen.classList.add('hidden');
   resultsScreen.classList.remove('hidden');
 
-  const personalResult = data.leaderboard.find(item => item.name === participantName);
+  const personalResult = data.leaderboard.find(
+    (item) => item.name === participantName
+  );
 
   if (personalResult) {
     document.getElementById('resultWpm').textContent = personalResult.wpm;
-    document.getElementById('resultAccuracy').textContent = personalResult.accuracy + '%';
+    document.getElementById('resultAccuracy').textContent =
+      personalResult.accuracy + '%';
     document.getElementById('resultErrors').textContent = personalResult.errors;
-    document.getElementById('resultBackspaces').textContent = personalResult.backspaces;
+    document.getElementById('resultBackspaces').textContent =
+      personalResult.backspaces;
   }
 });
 
@@ -268,7 +274,7 @@ socket.on('finalResults', (data) => {
   lobbyScreen.classList.add('hidden');
   testScreen.classList.add('hidden');
   resultsScreen.classList.add('hidden');
-  
+
   // Show completion screen with save notification
   completionScreen.classList.remove('hidden');
 });
