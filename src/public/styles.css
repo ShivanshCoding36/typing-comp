@@ -2234,3 +2234,11 @@ body {
 body {
   font-size: 16.5px;
 }
+
+.stat-value {
+  transition: transform 0.25s ease;
+}
+
+.stat-card:hover .stat-value {
+  transform: scale(1.15);
+}

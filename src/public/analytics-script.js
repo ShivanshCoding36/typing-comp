@@ -1,5 +1,9 @@
 // Analytics Dashboard Script
 let charts = {};
+Chart.defaults.color = '#eaeaea';
+Chart.defaults.borderColor = 'rgba(255,255,255,0.15)';
+Chart.defaults.plugins.legend.labels.color = '#eaeaea';
+Chart.defaults.scale.grid.color = 'rgba(255,255,255,0.08)';
 
 // Check authentication
 function checkAuth() {
@@ -152,39 +156,61 @@ function createTrendsChart(performanceData) {
     data: {
       labels: performanceData.map((d) => formatDate(d.date)),
       datasets: [
-        {
-          label: 'Avg WPM',
-          data: performanceData.map((d) => d.avgWPM),
-          borderColor: 'rgba(52, 152, 219, 1)',
-          backgroundColor: 'rgba(52, 152, 219, 0.1)',
-          tension: 0.4,
-          fill: true,
-        },
-        {
-          label: 'Avg Accuracy (%)',
-          data: performanceData.map((d) => d.avgAccuracy),
-          borderColor: 'rgba(46, 204, 113, 1)',
-          backgroundColor: 'rgba(46, 204, 113, 0.1)',
-          tension: 0.4,
-          fill: true,
-        },
-      ],
+  {
+    label: 'Avg WPM',
+    data: performanceData.map(d => d.avgWPM),
+    borderColor: 'rgba(52, 152, 219, 1)',
+    tension: 0.4,
+    fill: true,
+    backgroundColor: (ctx) => {
+      const gradient = ctx.chart.ctx.createLinearGradient(0, 0, 0, 300);
+      gradient.addColorStop(0, 'rgba(52, 152, 219, 0.4)');
+      gradient.addColorStop(1, 'rgba(52, 152, 219, 0)');
+      return gradient;
     },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'top',
+  },
+  {
+    label: 'Avg Accuracy (%)',
+    data: performanceData.map(d => d.avgAccuracy),
+    borderColor: 'rgba(46, 204, 113, 1)',
+    tension: 0.4,
+    fill: true,
+    backgroundColor: (ctx) => {
+      const gradient = ctx.chart.ctx.createLinearGradient(0, 0, 0, 300);
+      gradient.addColorStop(0, 'rgba(46, 204, 113, 0.4)');
+      gradient.addColorStop(1, 'rgba(46, 204, 113, 0)');
+      return gradient;
+    },
+  },
+],
+
+    },
+  options: {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: { position: 'top' },
+    tooltip: {
+      callbacks: {
+        label: (context) => {
+          if (context.dataset.label.includes('Accuracy')) {
+            return `${context.raw}% Accuracy`;
+          }
+          return `${context.raw} WPM`;
         },
       },
-      scales: {
-        y: {
-          beginAtZero: true,
-          max: 100,
-        },
-      },
     },
+  },
+  scales: {
+    y: {
+      beginAtZero: true,
+      max: 100,
+    },
+  },
+},
+
+   
+
   });
 }
 
@@ -284,11 +310,23 @@ function createPerformanceChart(data) {
           display: false,
         },
       },
-      scales: {
-        x: {
-          beginAtZero: true,
-        },
-      },
+     scales: {
+  yWPM: {
+    type: 'linear',
+    position: 'left',
+    beginAtZero: true,
+    title: { display: true, text: 'WPM' },
+  },
+  yAccuracy: {
+    type: 'linear',
+    position: 'right',
+    beginAtZero: true,
+    max: 100,
+    title: { display: true, text: 'Accuracy (%)' },
+    grid: { drawOnChartArea: false },
+  },
+},
+
     },
   });
 }
@@ -371,6 +409,7 @@ async function loadAnalytics() {
 
     // Update top performers table
     updateTopPerformersTable(participants.data.topPerformers);
+createAccuracyVsWpmChart(participants.data.topPerformers);
 
     // Show content
     document.getElementById('loading').style.display = 'none';
@@ -382,6 +421,45 @@ async function loadAnalytics() {
     );
   }
 }
+
+function createAccuracyVsWpmChart(data) {
+  const ctx = document.getElementById('accuracyVsWpmChart');
+  if (!ctx) return;
+
+  if (charts.accuracyVsWpm) {
+    charts.accuracyVsWpm.destroy();
+  }
+
+  charts.accuracyVsWpm = new Chart(ctx, {
+    type: 'scatter',
+    data: {
+      datasets: [
+        {
+          label: 'Participants',
+          data: data.map(p => ({
+            x: p.avgWPM,
+            y: p.avgAccuracy,
+          })),
+          backgroundColor: 'rgba(241, 196, 15, 0.8)',
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          title: { display: true, text: 'WPM' },
+        },
+        y: {
+          title: { display: true, text: 'Accuracy (%)' },
+          max: 100,
+        },
+      },
+    },
+  });
+}
+
 
 // Period selector change handler
 document.getElementById('periodSelector').addEventListener('change', () => {
