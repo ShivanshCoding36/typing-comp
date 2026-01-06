@@ -2127,110 +2127,26 @@ body {
   color: #000;
   cursor: default;
 }
-/* Organizer header polish */
-.organizer-header {
-  margin-bottom: 24px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--color-card-border);
-}
-
-/* Section subtitle */
-.section-subtitle {
-  margin-top: -8px;
-  margin-bottom: 16px;
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-}
-
-/* Card grouping */
-.card-group {
+.password-input {
+  position: relative;
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  align-items: center;
 }
 
-/* Make left panel slightly stronger */
-.setup-section {
-  border: 1px solid var(--color-card-border);
-  background: var(--color-surface);
+.password-input input {
+  width: 100%;
+  padding-right: 40px;
 }
 
-/* Improve placeholder text */
-.placeholder-text.muted {
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-sm);
-  text-align: center;
-  padding: 12px 0;
+.eye-icon {
+  position: absolute;
+  right: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  user-select: none;
+  opacity: 0.7;
 }
 
-/* Consistent section spacing */
-.section {
-  padding: 20px;
-}
-/* Gradient background for organizer panels */
-.setup-section,
-.control-section {
-  background: linear-gradient(
-    135deg,
-    #0f2027,
-    #203a43,
-    #2c5364
-  );
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-}
-
-/* Improve contrast for content inside gradient */
-.setup-section h2,
-.control-section h2,
-.setup-section h3,
-.control-section h3 {
-  color: #e6f6ff;
-}
-
-.setup-section label,
-.control-section label,
-.section-subtitle {
-  color: rgba(230, 246, 255, 0.75);
-}
-
-/* Inputs stay readable */
-.setup-section input {
-  background: rgba(0, 0, 0, 0.35);
-  border-color: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
-}
-
-/* Placeholder text */
-.setup-section input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
-}
-.setup-section h2,
-.control-section h2 {
-  font-size: 1.6rem; /* was ~1.25rem */
-  font-weight: 700;
-}
-.setup-section h3,
-.control-section h3 {
-  font-size: 1.2rem;
-  font-weight: 600;
-}
-.setup-section label {
-  font-size: 0.95rem;
-  font-weight: 500;
-}
-.setup-section input {
-  font-size: 1rem;
-}
-.comp-info span {
-  font-size: 1.05rem;
-  font-weight: 600;
-}
-.placeholder-text,
-.section-subtitle {
-  font-size: 0.95rem;
-}
-body {
-  font-size: 16.5px;
+.eye-icon:hover {
+  opacity: 1;
 }

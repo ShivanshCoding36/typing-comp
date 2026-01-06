@@ -55,4 +55,19 @@ const loginForm = document.getElementById('loginForm');
         loginBtn.disabled = false;
         loginBtn.textContent = 'Login';
       }
+
+      
     });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const passwordInput = document.getElementById("password");
+  const toggle = document.getElementById("togglePassword");
+
+  if (!passwordInput || !toggle) return;
+
+  toggle.addEventListener("click", () => {
+    const isHidden = passwordInput.type === "password";
+    passwordInput.type = isHidden ? "text" : "password";
+    toggle.textContent = isHidden ? "🙈" : "👁️";
+  });
+});
