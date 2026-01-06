@@ -1,4 +1,5 @@
 const { updateAndBroadcastLeaderboard } = require('../utils/leaderboard');
+const logger = require('../../config/logger');
 
 async function handleProgress(socket, io, data, activeCompetitions) {
   const { competitionId, correctChars, totalChars, errors = 0, backspaces = 0 } = data;
@@ -42,7 +43,7 @@ async function handleProgress(socket, io, data, activeCompetitions) {
       compData.lastLeaderboardUpdate = Date.now();
     }
   } catch (error) {
-    console.error('Progress error:', error);
+    logger.error('Progress error:', error);
   }
 }
 
